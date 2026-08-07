@@ -44,8 +44,8 @@ exports.createCourse = async (req,res)=>{
 
     // check if tag is valid or not
 
-    const tagdetails = await Tag.findById(tag);
-    if(!tagDetails){
+    const categorydetails = await Category.findById(tag);
+    if(!categoryDetails){
         return res.status(404).json({
             success:false,
             message;"tag details not found",
@@ -118,3 +118,28 @@ return res.status(200).json({
 
 
 // get all handler functions
+
+exports.showAllCourses = async(req,res)=>{
+
+    try{
+        const allCourses = await Course.find({},{
+
+            return res.status(200).json({
+                success:true;
+                message:"data for all the Courses fetch successfully",
+            })
+        })
+
+
+    }
+    catch(error){
+        console.log(error);
+        return res.status(500).json({
+            success:false,
+            message:"cannot fetch course data",
+            error:error.message,
+        })
+
+    }
+
+}

@@ -4,13 +4,13 @@ const mailSender= require("../utils/mailSender");
 
 
 // resetPasswordToken
-exports.resetPassword = async(req,res){
+exports.resetPasswordToken = async(req,res) => {
     // get email from the body
     try{
     const email = req.body.email;
     // check user for this email , email validation 
     const user = await User.findOne({email:email});
-    if(!User){
+    if(!user){
         return res.json({success:false,
             message:"Your email is not registered with us"})
         
@@ -24,24 +24,21 @@ exports.resetPassword = async(req,res){
 
 
     // update the user by adding te token and expire time 
-    const updatedDetails = await User.findOneAndUpadate({email:email}{
-        token:false,
+    const updatedDetails = await User.findOneAndUpdate({email:email}, {
+        token:token,
         resetPasswordExpires:Date.now()+5*60*1000,
     },{new:true}
 )
     // cerate url 
-    const url = "http://localhost:3000/update-password/${token}"
+    const url = `http://localhost:3000/update-password/${token}`;
     // send the mail containing te url
-    awiat mailSender(email,"Password reset link", "passwrod reeset link: ${url}");
+    await mailSender(email,"Password reset link", `passwrod reeset link: ${url}`);
     // return res
 
     return res.json({
         succes:true,
         message:"email sent successfully , please check email and chage password"
     })
-
-
-    const url = "http://localhost:3000/update-password/${token}"
 
 }
 
@@ -51,7 +48,7 @@ exports.resetPassword = async(req,res){
 
 catch(error){
     console.log(error);
-    return res.status.json({
+    return res.status(500).json({
         success:false,
         message:"something went wrong while reste the password "
     })
@@ -67,20 +64,20 @@ exports.resetPassword= async (req,res)=>{
     try{
 
         // data fetch
-        const {password,confirmPasswrod,token} = req.body;
+        const {password,confirmPassword,token} = req.body;
 
 
 
         // validation
 
-        if(password!=confirmPasswrod){
+        if(password!=confirmPassword){
             return res.json({
                 succcess:false,
                 message:"Password not matching",
             });
         }
         // get user datails form db using token
-        const userDetails = awiat user,findOne({user:token});
+        const userDetails = await User.findOne({token:token});
 
 
         // if no entry - invlalid token
@@ -109,14 +106,14 @@ exports.resetPassword= async (req,res)=>{
 
         // password updated
 
-        await User.findOneAndUpdate{
+        await User.findOneAndUpdate(
             {token:token},
-            {password:hashedPassword},
-            {new:true},
-        }
+            {password:hashPassword},
+            {new:true}
+        );
         // return response
 
-        return res.status(200).josn({
+        return res.status(200).json({
             success:true,
             message:"password reset successfull",
         })
@@ -125,7 +122,7 @@ exports.resetPassword= async (req,res)=>{
         console.log(error)
         return res.status(500).json({
             success:false,
-            message:
+            message: "Something went wrong"
         })
     }
 }
