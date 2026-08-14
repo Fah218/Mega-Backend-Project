@@ -1,7 +1,7 @@
 const User = require("../models/User");
-const mailSender= require("../utils/mailSender");
-
-
+const mailSender = require("../utils/mailSender");
+const bcrypt = require("bcrypt");
+const crypto = require("crypto");
 
 // resetPasswordToken
 exports.resetPasswordToken = async(req,res) => {
@@ -36,24 +36,19 @@ exports.resetPasswordToken = async(req,res) => {
     // return res
 
     return res.json({
-        succes:true,
-        message:"email sent successfully , please check email and chage password"
+        success:true,
+        message:"email sent successfully , please check email and change password"
     })
 
+    }
+    catch(error){
+        console.log(error);
+        return res.status(500).json({
+            success:false,
+            message:"something went wrong while resetting the password "
+        })
+    }
 }
-
-
-
-}
-
-catch(error){
-    console.log(error);
-    return res.status(500).json({
-        success:false,
-        message:"something went wrong while reste the password "
-    })
-}
-
 
 
 
@@ -72,15 +67,15 @@ exports.resetPassword= async (req,res)=>{
 
         if(password!=confirmPassword){
             return res.json({
-                succcess:false,
+                success:false,
                 message:"Password not matching",
             });
         }
-        // get user datails form db using token
+        // get user details form db using token
         const userDetails = await User.findOne({token:token});
 
 
-        // if no entry - invlalid token
+        // if no entry - invalid token
 
         if(!userDetails){
             return res.json({
@@ -93,8 +88,8 @@ exports.resetPassword= async (req,res)=>{
 
         if(userDetails.resetPasswordExpires<Date.now()){
             return res.json({
-                success:true,
-                message:"Token is expired please regenarte utr token",
+                success:false,
+                message:"Token is expired please regenerate your token",
             })
         }
 

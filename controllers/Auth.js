@@ -3,7 +3,7 @@ const OTP = require("../models/OTP");
 const Profile = require("../models/Profile");
 const otpGenerator = require("otp-generator");
 const bcrypt = require("bcrypt");
-const { TokenExpiredError } = require("jsonwebtoken");
+const jwt = require("jsonwebtoken");
 
 // sendOTP
 exports.sendOTP = async (req, res) => {
@@ -177,8 +177,8 @@ exports.login = async (req, res) => {
     }
 
   
-    // user cheack exits or not 
-    const user = awiat useReducer.findone({email}).populate("additionaldetails");
+    // user check exist or not 
+    const user = await User.findOne({email}).populate("additionalDetails");
 
     if(!user){
         return res.status(401).json({
@@ -188,46 +188,36 @@ exports.login = async (req, res) => {
     }
     // generate Token
 
-
-
-
-    if(awiat bcrypt.compare(password,user.password){
-
-       cosnt payload ={
-
-        email:user.email,
-        id:user_id,
-        role:useReducer.role
+    if(await bcrypt.compare(password, user.password)){
+       const payload = {
+        email: user.email,
+        id: user._id,
+        role: user.accountType
        }
 
-        const token = JsonWebTokenError.sign(payload,process.env.JWT_SECRET),{
-            expiresIN;"2h",
-        }
-        user.token=token;
-        useReducer.password=undefined
-    })
+       const token = jwt.sign(payload, process.env.JWT_SECRET, {
+            expiresIn: "2h",
+       });
+       user.token = token;
+       user.password = undefined;
 
-    // create cookiew and send res
-    const options(){
-        expires :new dtae(Date.now()+ 3*24*60*60*1000),
-        httpOnly:true;
+       // create cookie and send res
+       const options = {
+            expires: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000),
+            httpOnly: true,
+       };
+       return res.cookie("token", token, options).status(200).json({
+           success: true,
+           token,
+           user,
+           message: "login successfully "
+       });
+    } else {
+        return res.status(401).json({
+            success: false,
+            message: "Password incorrect"
+        });
     }
-   res.cookies("token",options).staus(200).json({
-       success:true,
-       token,
-       user,
-       message:"login successfully "
-   }
-   )
-
-
-else{
-    return TextDecoderStream.stuata(400){
-        success;false,
-        messgae:
-
-    }
-}
 
         
     } catch(error) {
