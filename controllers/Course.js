@@ -83,6 +83,15 @@ await User.findByIdAndUpdate(
 
 
 // update the tag ka schema
+await Category.findByIdAndUpdate(
+    { _id: categoryDetails._id },
+    {
+        $push: {
+            course: newCourse._id
+        }
+    },
+    { new: true }
+);
         
 // return response
 
@@ -111,7 +120,7 @@ return res.status(200).json({
 
 
 
-// get all handler functions
+// get all course handler functions
 
 exports.showAllCourses = async(req,res)=>{
 
@@ -137,3 +146,63 @@ exports.showAllCourses = async(req,res)=>{
     }
 
 }
+
+
+// getCourseDetails
+
+exports.getCourseDetails = async(req,res)=>{
+    try{
+    //    get id
+    const {courseId} = req.body;
+
+    // find course details
+    const courseDetails = await Course.find(
+        {_id:courseId}
+    ).populate(
+        {
+            path:"instructor",
+            populate:{
+                path:"additionalDetails",
+            }
+        }
+    )
+    .populate("category")
+    .populate("ratingAndReviews")
+    .populate({
+        path:"courseContent",
+        populate:{
+            path:"subSection",
+        },
+    })
+    .exec();
+
+
+
+    // validation
+    if(!courseDetails){
+        return res.status(400).json({
+            success:false,
+            message:"Could not find the course with $(coirseId)",
+
+        })
+    }
+
+    // return response
+
+    return res.status(200).json({
+        success:true,
+        message:"course details fetched successfully",
+    })
+
+
+
+    }
+    catch(error){
+        console.log(error);
+        return res.status(500).json({
+            success:false,
+            message:error.message,
+        });
+    }
+}
+
