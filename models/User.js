@@ -28,7 +28,7 @@ const userSchema = new mongoose.Schema({
     },
     additionalDetails:{
         type:mongoose.Schema.Types.ObjectId,
-        res:"Profiles",
+        ref:"Profiles",
     },
     courses:[
         {
@@ -53,11 +53,13 @@ const userSchema = new mongoose.Schema({
 
 
     courseProgress:[{
-      type:mongoose.Schema.types.ObjectId,
+      type:mongoose.Schema.Types.ObjectId,
       ref:"CourseProgress",
     }
 ]
 
 })
 
-module.exports=mongoose.model("User",userSchema);
+
+// Prevent model overwrite
+module.exports = mongoose.models.User || mongoose.model("User", userSchema);

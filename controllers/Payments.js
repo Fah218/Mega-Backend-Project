@@ -3,8 +3,7 @@ const Course = require("../models/Course");
 const User = require("../models/User");
 const mailSender = require("../utils/mailSender");
 const {courseEnrollmentEmail} = require("../mail/templates/CourseEnrollmentEmail");
-const { validatePaymentVerification } = require("razorpay/dist/utils/razorpay-utils");
-const { default: paymentLink } = require("razorpay/dist/types/paymentLink");
+
 const mongoose = require("mongoose");
 const crypto = require("crypto");
 

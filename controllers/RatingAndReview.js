@@ -11,10 +11,10 @@ exports.createrating = async(req,res)=>{
         // fetch data from req ki body 
         const {rating, review , courseId} = req.body;
         // check if user is enrolled
-        const courseDetails = await Course.findOne(
-                          {_id:courseid},
-                          studentEnrolled:{elementMtach:{$eq:userid}}
-        );
+        const courseDetails = await course.findOne({
+                          _id: courseId,
+                          studentEnrolled: {$elemMatch: {$eq: userid}}
+        });
         if(!courseDetails){
             return res.status(404).json({
                success:false,
@@ -23,9 +23,9 @@ exports.createrating = async(req,res)=>{
         }
         // chekc user already Rate
 
-        const alreadyReviewed = await RayingAndreviewed.findOne({
-            user:userId,
-            cousre:courseId,
+        const alreadyReviewed = await RatingAndReviews.findOne({
+            user:userid,
+            course:courseId,
         })
         if(alreadyReviewed){
             return res.status(403).json({
@@ -37,28 +37,27 @@ exports.createrating = async(req,res)=>{
 
         // create rating and review
 
-        const ratingAndReviews = await ratingAndReviews.create({
+        const ratingReview = await RatingAndReviews.create({
             rating,review,
             course:courseId,
-            
+            user:userid
         })
 
         
         // update course with this rating 
 
-        consty updatedCourse details = await course.findByIdAndUpdate(_id:courseId){
+        const updatedCourseDetails = await course.findByIdAndUpdate(courseId, {
             $push:{
-                tratingAndReviewed:ratingReview._id
-            },
-            {new:true};
-        }
+                ratingandReviews:ratingReview._id
+            }
+        }, {new:true});
         console.log(updatedCourseDetails);
         // return response
 
         return res.status(200).json({
             success:true,
             message:"Rating and reviewed update successfully",
-            rating review
+            ratingReview
         })
     }
     catch(error){
@@ -82,24 +81,24 @@ exports.getAverageRating = async(req,res)=>{
 
     //   calculate avg rating 
 
-    const result = aeiat RatingAndReview.aggregate({
-        $match:{
-            course:new monggose.Types.ObjectId(courseId),
+    const result = await RatingAndReviews.aggregate([
+        {
+            $match:{
+                course:new mongoose.Types.ObjectId(courseId),
+            }
         },
-
         {
             $group:{
                 _id:null,
                 averageRating:{
-                    {$avg:$rating},
+                    $avg:"$rating"
                 }
             }
         }
-    })
+    ])
     //   return rating 
 
-    if(result.length()
-    >0){
+    if(result.length >0){
 return res.status(200).json({
     success:true,
     averagerating:result[0].averageRating,
@@ -120,7 +119,7 @@ return res.status(200).json({
 
 
 
-})
+}
 
 
 
@@ -138,16 +137,16 @@ exports.getAllRating = async(req,res)=>{
 
        try{
 
-        const allReview = await RatingAndReview.find({})
-        .sort({rating:"desc"});
+        const allReview = await RatingAndReviews.find({})
+        .sort({rating:"desc"})
         .populate({
             path:"user",
             select:"firstName lastName email image"
-        });
-        .populate{
+        })
+        .populate({
             path:"course",
             select:"courseName",
-        }
+        })
         .exec();
 
         return res.status(200).json({
@@ -163,7 +162,7 @@ exports.getAllRating = async(req,res)=>{
         console.log(error);
         return res.status(500).json({
             success:false,
-            message:error.message;
+            message:error.message
 
 
         })
