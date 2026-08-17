@@ -26,14 +26,14 @@ async function sendVerification(email,otp){
 
         console.log("email sent successfully " , mailResponse);
 
-    } catch(error){
-
-    }
+    } catch (error) {
+    console.log("Email sending failed:", error);
+}
 }
 
-OTPSchema.pre("save", async function(next){
-    await sendVerification(this.email,this.otp);
-    next();
+OTPSchema.pre("save", async function () {
+    await sendVerification(this.email, this.otp);
 });
+
 
 module.exports=mongoose.model("OTP",OTPSchema);

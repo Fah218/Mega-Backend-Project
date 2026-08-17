@@ -114,7 +114,7 @@ exports.capturePayment= async (req,res)=>{
 // verify Signature of Razorpay and Server
 
 exports.verifySignature = async (req,res)=>{
-     const webhookSecret = "12345678";
+     const webhookSecret = process.env.RAZORPAY_WEBHOOK_SECRET || "12345678";
      
 
      const signature = req.headers["x-razorpay-signature"];
@@ -165,8 +165,8 @@ exports.verifySignature = async (req,res)=>{
 
             const emailResponse = await mailSender(
                            enrolledStudent.email,
-                           "congratulations from codehelp",
-                           "congratulation  u r onboard into new Codehelp coirse"
+                           "Congratulations from CodeHelp",
+                           courseEnrollmentEmail(enrolledCourse.courseName, enrolledStudent.firstName)
             );
 
             console.log(emailResponse);

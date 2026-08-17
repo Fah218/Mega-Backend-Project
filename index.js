@@ -1,6 +1,7 @@
 const express = require("express");
 const app = express();
 
+const fileUpload = require("express-fileupload");
 const userRoutes = require("./routes/User");
 const profileRoutes = require("./routes/Profile");
 const paymentRoutes = require("./routes/Payment");
@@ -18,6 +19,13 @@ database.connect();
 // middlewares
 app.use(express.json());
 app.use(cookieParser());
+
+app.use(
+    fileUpload({
+        useTempFiles: true,
+        tempFileDir: "/tmp/",
+    })
+);
 
 // routes
 app.use("/api/v1/auth", userRoutes);

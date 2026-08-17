@@ -91,7 +91,7 @@ exports.signup = async (req, res) => {
         if (password !== confirmPassword) {
             return res.status(403).json({
                 success: false,
-                message: "Password and confirm passwrod doesnot match please try again"
+                message: "Password and confirm password do not match, please try again"
             });
         }
 
@@ -130,7 +130,7 @@ exports.signup = async (req, res) => {
             gender: null,
             dateOfBirth: null,
             about: null,
-            contactNumber: null,
+            contactNumber: contactNumber,
         });
 
         const user = await User.create({
@@ -152,12 +152,13 @@ exports.signup = async (req, res) => {
         });
 
     } catch (error) {
-        console.log(error);
-        return res.status(500).json({
-            success: false,
-            message: "user Not register try again"
-        });
-    }
+    console.log("SIGNUP ERROR:", error);
+
+    return res.status(500).json({
+        success: false,
+        message: error.message,
+    });
+}
 };
 
 // login
@@ -183,7 +184,7 @@ exports.login = async (req, res) => {
     if(!user){
         return res.status(401).json({
             success:false,
-            message:"user is not register plz sign up ",
+            message:"User is not registered. Please sign up.",
         })
     }
     // generate Token
@@ -221,7 +222,11 @@ exports.login = async (req, res) => {
 
         
     } catch(error) {
-        console.log(error);
+        console.log("LOGIN ERROR:", error);
+        return res.status(500).json({
+            success: false,
+            message: "Login failed, please try again",
+        });
     }
 };
 

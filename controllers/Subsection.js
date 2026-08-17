@@ -10,7 +10,7 @@ exports.subSection= async(req,res)=>{
         // fecth data 
         const {SectionId, title , description , timeDuration} = req.body;
         // extract the file video
-        const video = req.files.videoFile;
+        const video = req.files ? req.files.videoFile : null;
         // validation
         if(!SectionId || !title || !description || !timeDuration || !video ){
             return res.status(400).json({

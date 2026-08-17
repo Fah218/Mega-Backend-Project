@@ -14,7 +14,7 @@ exports.createCourse = async (req,res)=>{
     // get thumbnail
 
 
-    const thumbnail = req.files.thumbnailImage;
+    const thumbnail = req.files ? req.files.thumbnailImage : null;
 
 
     // valiadtion 
@@ -29,7 +29,7 @@ exports.createCourse = async (req,res)=>{
     // check for the instructor
 
     const userID = req.user.id;
-    const instructorDetails = await User.findById(userId);
+    const instructorDetails = await User.findById(userID);
     console.log("Instructor details",instructorDetails);
 
 
@@ -156,7 +156,7 @@ exports.getCourseDetails = async(req,res)=>{
     const {courseId} = req.body;
 
     // find course details
-    const courseDetails = await Course.find(
+    const courseDetails = await Course.findOne(
         {_id:courseId}
     ).populate(
         {
@@ -167,7 +167,7 @@ exports.getCourseDetails = async(req,res)=>{
         }
     )
     .populate("category")
-    .populate("ratingAndReviews")
+    .populate("ratingandReviews")
     .populate({
         path:"courseContent",
         populate:{
@@ -182,7 +182,7 @@ exports.getCourseDetails = async(req,res)=>{
     if(!courseDetails){
         return res.status(400).json({
             success:false,
-            message:"Could not find the course with $(coirseId)",
+            message:`Could not find the course with ${courseId}`,
 
         })
     }
@@ -192,6 +192,7 @@ exports.getCourseDetails = async(req,res)=>{
     return res.status(200).json({
         success:true,
         message:"course details fetched successfully",
+        data: courseDetails,
     })
 
 

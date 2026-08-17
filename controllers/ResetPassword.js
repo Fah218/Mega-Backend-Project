@@ -32,7 +32,7 @@ exports.resetPasswordToken = async(req,res) => {
     // cerate url 
     const url = `http://localhost:3000/update-password/${token}`;
     // send the mail containing te url
-    await mailSender(email,"Password reset link", `passwrod reeset link: ${url}`);
+    await mailSender(email,"Password reset link", `password reset link: ${url}`);
     // return res
 
     return res.json({

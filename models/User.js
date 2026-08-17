@@ -1,62 +1,65 @@
-const mongoose=require("mongoose");
+const mongoose = require("mongoose");
 const { resetPassword } = require("../controllers/ResetPassword");
 
 const userSchema = new mongoose.Schema({
-    fisrtName:{
-        type:String,
-        require:true,
-        trim:true,
+    firstName: {
+        type: String,
+        required: true,
+        trim: true,
     },
-    lastName:{
-        type:String,
-        require:true,
-        trim:true,
+
+    lastName: {
+        type: String,
+        required: true,
+        trim: true,
     },
-    email:{
-        type:String,
-        require:true,
-        trim:true,
+
+    email: {
+        type: String,
+        required: true,
+        trim: true,
     },
-    password:{
-        type:String,
-        require:true,
+
+    password: {
+        type: String,
+        required: true,
     },
-    accountType:{
-        type:String,
-        enum:["Admin","Student","Instructor"],
-        require:true,
+
+    accountType: {
+        type: String,
+        enum: ["Admin", "Student", "Instructor"],
+        required: true,
     },
-    additionalDetails:{
-        type:mongoose.Schema.Types.ObjectId,
-        ref:"Profiles",
+    additionalDetails: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Profile",
     },
-    courses:[
+    courses: [
         {
-            type:mongoose.Schema.Types.ObjectId,
-            ref:"Course",
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Course",
         }
     ],
-    image:{
-        type:String,
-        required:true,
+    image: {
+        type: String,
+        required: true,
 
     },
-    token:{
-        type:String,
-        required:true,
+    token: {
+        type: String,
     },
-    resetPasswordExpires:{
-        type:Date,
+    resetPasswordExpires: {
+        type: Date,
     },
 
 
 
 
-    courseProgress:[{
-      type:mongoose.Schema.Types.ObjectId,
-      ref:"CourseProgress",
+    courseProgress: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "CourseProgress",
     }
-]
+    ]
 
 })
 

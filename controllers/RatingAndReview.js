@@ -1,6 +1,7 @@
 const RatingAndReviews = require("../models/RatingAndReview");
-const user = require("../models/user");
-const course = require("../models/course");
+const User = require("../models/User");
+const Course = require("../models/Course");
+const mongoose = require("mongoose");
 
 
 // createRating 
@@ -11,7 +12,7 @@ exports.createrating = async(req,res)=>{
         // fetch data from req ki body 
         const {rating, review , courseId} = req.body;
         // check if user is enrolled
-        const courseDetails = await course.findOne({
+        const courseDetails = await Course.findOne({
                           _id: courseId,
                           studentEnrolled: {$elemMatch: {$eq: userid}}
         });
@@ -46,7 +47,7 @@ exports.createrating = async(req,res)=>{
         
         // update course with this rating 
 
-        const updatedCourseDetails = await course.findByIdAndUpdate(courseId, {
+        const updatedCourseDetails = await Course.findByIdAndUpdate(courseId, {
             $push:{
                 ratingandReviews:ratingReview._id
             }

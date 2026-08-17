@@ -1,0 +1,46 @@
+.
+├── .env
+├── config
+│   ├── database.js
+│   └── razorpay.js
+├── controllers
+│   ├── Auth.js
+│   ├── Category.js
+│   ├── Course.js
+│   ├── Payments.js
+│   ├── Profile.js
+│   ├── RatingAndReview.js
+│   ├── ResetPassword.js
+│   ├── Sections.js
+│   └── Subsection.js
+├── index.js
+├── mail
+│   ├── PasswordUpdate.js
+│   └── templates
+│       ├── CourseEnrollmentEmail.js
+│       └── EmailVerificationTemplate.js
+├── middlewares
+│   └── auth.js
+├── models
+│   ├── Course.js
+│   ├── CourseProgress.js
+│   ├── OTP.js
+│   ├── Profile.js
+│   ├── RatingAndReview.js
+│   ├── Section.js
+│   ├── SubSection.js
+│   ├── User.js
+│   └── category.js
+├── package-lock.json
+├── package.json
+├── project-tree.txt
+├── routes
+│   ├── Course.js
+│   ├── Payment.js
+│   ├── Profile.js
+│   └── User.js
+└── utils
+    ├── imageUploader.js
+    └── mailSender.js
+
+9 directories, 35 files

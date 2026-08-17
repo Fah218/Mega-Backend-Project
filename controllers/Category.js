@@ -1,6 +1,4 @@
-const { validatePaymentVerification } = require("razorpay/dist/utils/razorpay-utils");
-const category = require("../models/category");
-const Tag = require("../models/category");
+const Category = require("../models/category");
 const Course = require("../models/Course");
 
 exports.createCategory = async (req, res) => {
@@ -16,7 +14,7 @@ exports.createCategory = async (req, res) => {
         }
 
         // create entry in db
-        const categoryDetails = await Tag.create({
+        const categoryDetails = await Category.create({
             name: name,
             description: description,
         });
@@ -42,7 +40,7 @@ exports.createCategory = async (req, res) => {
 
 exports.showAllcategory = async (req, res) => {
     try {
-        const allTags = await Tag.find({}, { name: true, description: true });
+        const allTags = await Category.find({}, { name: true, description: true });
         res.status(200).json({
             success: true,
             message: "All category returned successfully",
@@ -67,7 +65,7 @@ exports.categoryPageDetails = async (req, res) => {
         // get categorId
         const { categoryId } = req.body;
         // get Courses for specied category
-        const selectedCategory = await category.findById(categoryId)
+        const selectedCategory = await Category.findById(categoryId)
             .populate("course")
             .exec();
         // validate
@@ -80,14 +78,14 @@ exports.categoryPageDetails = async (req, res) => {
         }
         // get courses for differnet cousre 
 
-        const differentCategories = await category.find({
+        const differentCategories = await Category.find({
             _id: { $ne: categoryId },
         })
             .populate("course")
             .exec();
 
         // get top selling courses
-        const allCategories = await category.find()
+        const allCategories = await Category.find()
             .populate({
                 path: "course"
             })
