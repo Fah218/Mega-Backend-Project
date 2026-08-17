@@ -9,6 +9,7 @@ const courseRoutes = require("./routes/Course");
 
 const database = require("./config/database");
 const cookieParser = require("cookie-parser");
+require("./config/cloudinary");
 require("dotenv").config();
 
 const PORT = process.env.PORT || 4000;

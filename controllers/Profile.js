@@ -117,3 +117,43 @@ exports.getAllUserDetails = async (req, res) => {
         });
     }
 };
+
+// updateDisplayPicture
+exports.updateDisplayPicture = async (req, res) => {
+    try {
+        const displayPicture = req.files ? req.files.displayPicture : null;
+        const userId = req.user.id;
+        
+        if (!displayPicture) {
+            return res.status(404).json({
+                success: false,
+                message: "Image not found",
+            });
+        }
+        
+        const image = await uploadImageToCloudinary(
+            displayPicture,
+            process.env.FOLDER_NAME,
+            1000,
+            1000
+        );
+        
+        const updatedProfile = await User.findByIdAndUpdate(
+            { _id: userId },
+            { image: image.secure_url },
+            { new: true }
+        ).populate("additionalDetails");
+        
+        res.status(200).json({
+            success: true,
+            message: `Image Updated successfully`,
+            data: updatedProfile,
+        });
+    } catch (error) {
+        return res.status(500).json({
+            success: false,
+            message: "Issue with updating profile picture",
+            error: error.message,
+        });
+    }
+};
