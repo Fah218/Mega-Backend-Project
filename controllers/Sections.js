@@ -1,55 +1,52 @@
 const Section = require("../models/Section");
 const Course = require("../models/Course");
 
-exports.CreateSection= async(req,res)=>{
-    try{
-    // data fetch krna
-    const {sectionName, courseId} = req.body;
+exports.CreateSection = async (req, res) => {
+    try {
+        const { sectionName, courseId } = req.body;
 
+        if (!sectionName || !courseId) {
+            return res.status(400).json({
+                success: false,
+                message: "Missing Properties",
+            });
+        }
 
-    // data validation
+        const newSection = await Section.create({
+            sectionName,
+        });
 
-    if(!sectionName || !courseId){
-        return res.status(400).json({
-            success:false,
-            message:"Missing Properties",
-        })
-    }
-    // create section 
+        const updatedCourseDetails = await Course.findByIdAndUpdate(
+            courseId,
+            {
+                $push: {
+                    courseContent: newSection._id,
+                },
+            },
+            { returnDocument: "after" }
+        );
 
-    const newSection = await Section.create({sectionName});
-    // update course with section ObjectId
-    const updateCourseDetails = await Course.findByIdAndUpdate(
-                         courseId,
-                         {
-                            $push:{
-                                courseContent:newSection._id,
-                            }
-                         },
-                         {new:true},
-    )
+        if (!updatedCourseDetails) {
+            return res.status(404).json({
+                success: false,
+                message: "Course not found",
+            });
+        }
 
-    // use populate to replace the sections/subsections both in the updatedCourseDetails
-    // return response 
+        return res.status(200).json({
+            success: true,
+            message: "Section created Successfully",
+            updatedCourseDetails,
+        });
 
-    return res.status(200).json({
-        success:true,
-        message:"Section created Successfully",
-        updatedCourseDetails,
-    })
-
-    }
-    catch(error){
+    } catch (error) {
         return res.status(500).json({
-            success:false,
-            message:"Unable to create the section please try again",
-            error:error.message
-        })
-
+            success: false,
+            message: "Unable to create the section please try again",
+            error: error.message,
+        });
     }
-}
-
-
+};
 exports.updateSection=async(req,res)=>{
     try{
     //data fetch

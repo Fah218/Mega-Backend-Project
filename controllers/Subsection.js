@@ -1,21 +1,26 @@
 const Subsection = require("../models/SubSection");
 const Section = require("../models/Section");
 const { uploadImageToCloudinary } = require("../utils/imageUploader");
-exports.subSection= async(req,res)=>{
-    try{
 
 
+
+exports.subSection = async (req, res) => {
+    try {
 
 
         // fecth data 
-        const {SectionId, title , description , timeDuration} = req.body;
+        const { SectionId, title, description, timeDuration } = req.body;
         // extract the file video
         const video = req.files ? req.files.videoFile : null;
+
+
+        console.log("BODY:", req.body);
+        console.log("FILES:", req.files);
         // validation
-        if(!SectionId || !title || !description || !timeDuration || !video ){
+        if (!SectionId || !title || !description || !timeDuration || !video) {
             return res.status(400).json({
-                success:false,
-                message:"All fields are required",
+                success: false,
+                message: "All fields are required",
             });
         }
         // upload video to cloudinary
@@ -37,23 +42,23 @@ exports.subSection= async(req,res)=>{
                     subSection: subSectionDetails._id,
                 }
             },
-            {new:true}
+            { new: true }
         ).populate("subSection");
 
         // return response
         return res.status(200).json({
-            success:true,
+            success: true,
             message: "subsection created successfully",
-            data: updateSection 
+            data: updateSection
         });
 
 
     }
-    catch(error){
-         return res.status(500).json({
-            success:false,
-            message:"Unable to create the subsection, try again",
-            error:error.message
+    catch (error) {
+        return res.status(500).json({
+            success: false,
+            message: "Unable to create the subsection, try again",
+            error: error.message
         });
     }
 }
@@ -64,7 +69,7 @@ exports.updateSubsection = async (req, res) => {
     try {
         // fetch data
         const { subSectionId, title, description, timeDuration } = req.body;
-        
+
         // validation
         if (!subSectionId) {
             return res.status(400).json({
@@ -72,10 +77,10 @@ exports.updateSubsection = async (req, res) => {
                 message: "Subsection ID is required",
             });
         }
-        
+
         // fetch subsection
         const subSection = await Subsection.findById(subSectionId);
-        
+
         if (!subSection) {
             return res.status(404).json({
                 success: false,
@@ -120,7 +125,7 @@ exports.deleteSubsection = async (req, res) => {
     try {
         // fetch data
         const { subSectionId, sectionId } = req.body;
-        
+
         // validation
         if (!subSectionId || !sectionId) {
             return res.status(400).json({

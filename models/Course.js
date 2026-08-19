@@ -29,10 +29,11 @@ const courseSchema=new mongoose.Schema({
     thumbnail:{
         type:String,
     },
-    category:[{
-        type:mongoose.Schema.Types.ObjectId,
-        ref:"Category",
-    }],
+   category: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Category",
+    required: true,
+},
     studentEnrolled:[{
         type:mongoose.Schema.Types.ObjectId,
         required:true,

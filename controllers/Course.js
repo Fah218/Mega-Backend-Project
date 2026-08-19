@@ -8,8 +8,7 @@ const { uploadImageToCloudinary } = require("../utils/imageUploader");
 exports.createCourse = async (req,res)=>{
     try{
     //    fetch the data
-
-    const {courseName , courseDescription , whatYouWillLearn , price , tag}= req.body;
+const { courseName, courseDescription, whatYouWillLearn, price, category } = req.body;
 
     // get thumbnail
 
@@ -19,7 +18,7 @@ exports.createCourse = async (req,res)=>{
 
     // valiadtion 
 
-    if(!courseName || !courseDescription || !whatYouWillLearn || !price || !tag || !thumbnail){
+  if (!courseName || !courseDescription || !whatYouWillLearn || !price || !category || !thumbnail){
         return res.status(400).json({
             success:false,
             message:"All fields are required",
@@ -43,13 +42,14 @@ exports.createCourse = async (req,res)=>{
 
     // check if tag is valid or not
 
-    const categoryDetails = await Category.findById(tag);
-    if(!categoryDetails){
-        return res.status(404).json({
-            success:false,
-            message: "tag details not found",
-        });
-    }
+   const categoryDetails = await Category.findById(category);
+
+if (!categoryDetails) {
+    return res.status(404).json({
+        success: false,
+        message: "Category not found",
+    });
+}
 
     // upload img to uploadImageToCloudinary
 
@@ -58,11 +58,11 @@ const thumbnails = await uploadImageToCloudinary(thumbnail,process.env.FOLDER_NA
 // create an entry for the new course 
 
 const newCourse = await Course.create({
-    courseName: courseName,
-    courseDescription: courseDescription,
+    courseName,
+    courseDescription,
     instructor: instructorDetails._id,
-    whatYouWillLearn: whatYouWillLearn,
-    price: price,
+    whatYouWillLearn,
+    price,
     category: categoryDetails._id,
     thumbnail: thumbnails.secure_url,
 });
@@ -167,7 +167,7 @@ exports.getCourseDetails = async(req,res)=>{
         }
     )
     .populate("category")
-    .populate("ratingandReviews")
+    // .populate("ratingandReviews")
     .populate({
         path:"courseContent",
         populate:{
