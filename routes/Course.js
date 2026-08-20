@@ -59,7 +59,7 @@ router.post("/getCourseDetails", getCourseDetails);
 // Category can Only be Created by Admin
 router.post("/createCategory", auth, isAdmin, createCategory);
 router.get("/showAllCategories", showAllcategory);
-router.post("/getCategoryPageDetails", categoryPageDetails);
+router.get("/getCategoryPageDetails", categoryPageDetails);
 
 
 // ********************************************************************************************************
@@ -67,8 +67,8 @@ router.post("/getCategoryPageDetails", categoryPageDetails);
 // ********************************************************************************************************
 
 router.post("/addSection", auth, isInstructor, CreateSection);
-router.post("/updateSection", auth, isInstructor, updateSection);
-router.post("/deleteSection", auth, isInstructor, deleteSection);
+router.put("/updateSection", auth, isInstructor, updateSection);
+router.delete("/deleteSection", auth, isInstructor, deleteSection);
 
 
 // ********************************************************************************************************
@@ -76,8 +76,8 @@ router.post("/deleteSection", auth, isInstructor, deleteSection);
 // ********************************************************************************************************
 
 router.post("/addSubSection", auth, isInstructor, subSection);
-router.post("/updateSubSection", auth, isInstructor, updateSubsection);
-router.post("/deleteSubSection", auth, isInstructor, deleteSubsection);
+router.put("/updateSubSection", auth, isInstructor, updateSubsection);
+router.delete("/deleteSubSection", auth, isInstructor, deleteSubsection);
 
 
 // ********************************************************************************************************
@@ -87,6 +87,12 @@ router.post("/deleteSubSection", auth, isInstructor, deleteSubsection);
 router.post("/createRating", auth, isStudent, createrating);
 router.get("/getAverageRating", getAverageRating);
 router.get("/getReviews", getAllRating);
+
+
+
+
+
+
 
 
 module.exports = router;

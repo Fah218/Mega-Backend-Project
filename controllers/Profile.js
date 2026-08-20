@@ -58,6 +58,7 @@ exports.deleteProfile = async (req, res) => {
     try {
         // get id 
         const id = req.user.id;
+        console.log("Printing ID: ", req.user.id);
 
         // validation
         const userDetails = await User.findById(id);

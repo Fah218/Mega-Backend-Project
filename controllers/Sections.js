@@ -69,11 +69,18 @@ exports.updateSection=async(req,res)=>{
                          {
                            sectionName: sectionName
                          },
-                         {new:true}
+                        { new: true }
     )
-    //    return response 
 
-     return res.status(200).json({
+    if (!section) {
+        return res.status(404).json({
+            success: false,
+            message: "Section not found",
+        });
+    }
+
+    // return response 
+    return res.status(200).json({
         success:true,
         message:"Section updated Successfully",
         section,
